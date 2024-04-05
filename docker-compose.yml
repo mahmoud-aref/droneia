@@ -1,0 +1,18 @@
+version: '3.7'
+#
+# database container
+services:
+  droneia-db:
+    image: postgres
+    container_name: droneia-db
+    environment:
+      POSTGRES_USER: droneia-root
+      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_DB: droneia-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - droneia-db:/var/lib/postgresql/data
+
+volumes:
+  droneia-db:

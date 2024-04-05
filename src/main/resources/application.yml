@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: droneia
+
+  r2dbc:
+    url: r2dbc:postgresql://droneia-db:5432/droneia-db
+    username: droneia-root
+    password: P@ssw0rd
