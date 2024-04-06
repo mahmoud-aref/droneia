@@ -2,7 +2,7 @@ package com.elmenus.droneia.infrastructure.security.config;
 
 import com.elmenus.droneia.infrastructure.security.filter.JwtAuthWebFilter;
 import com.elmenus.droneia.infrastructure.security.service.JwtService;
-import com.elmenus.droneia.infrastructure.user.datasource.jpa.UserRepository;
+import com.elmenus.droneia.infrastructure.datasource.sql.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

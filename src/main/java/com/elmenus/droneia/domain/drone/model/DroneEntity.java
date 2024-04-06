@@ -1,11 +1,10 @@
-package com.elmenus.droneia.domain.user.model;
+package com.elmenus.droneia.domain.drone.model;
 
-import com.elmenus.droneia.infrastructure.security.model.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,26 +15,28 @@ import java.util.UUID;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@AllArgsConstructor
+@Table(name = "drones")
 @Entity
-public class UserEntity {
+public class DroneEntity {
 
     @Id
     private UUID id;
 
-    @NotBlank
-    private String username;
-
-    @NotBlank
-    private String password;
-
-    private String fullName;
-
-    private boolean active;
+    @Size(max = 100)
+    private String serialNumber;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private DroneModel model;
+
+    @Size(max = 500)
+    private double maxWeight;
+
+    @Size(max = 100)
+    private int batteryPercentage;
+
+    @Enumerated(EnumType.STRING)
+    private DroneState state;
 
 }

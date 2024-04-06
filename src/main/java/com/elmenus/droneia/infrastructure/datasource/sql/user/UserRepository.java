@@ -1,4 +1,4 @@
-package com.elmenus.droneia.infrastructure.user.datasource.jpa;
+package com.elmenus.droneia.infrastructure.datasource.sql.user;
 
 import com.elmenus.droneia.domain.user.model.UserEntity;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;

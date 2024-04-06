@@ -8,7 +8,7 @@ import com.elmenus.droneia.infrastructure.security.model.UserLoginRequest;
 import com.elmenus.droneia.infrastructure.security.model.UserRegistrationRequest;
 import com.elmenus.droneia.infrastructure.security.service.AuthenticationService;
 import com.elmenus.droneia.infrastructure.security.service.JwtService;
-import com.elmenus.droneia.infrastructure.user.datasource.jpa.UserRepository;
+import com.elmenus.droneia.infrastructure.datasource.sql.user.UserRepository;
 import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -16,8 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
