@@ -1,11 +1,13 @@
 package com.elmenus.droneia.infrastructure.security.config;
 
+import com.elmenus.droneia.infrastructure.datasource.sql.user.UserRepository;
 import com.elmenus.droneia.infrastructure.security.filter.JwtAuthWebFilter;
 import com.elmenus.droneia.infrastructure.security.service.JwtService;
-import com.elmenus.droneia.infrastructure.datasource.sql.user.UserRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
@@ -17,6 +19,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -56,21 +59,23 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity httpSecurity,
-                                                      ReactiveAuthenticationManager authenticationManager) {
+    public SecurityWebFilterChain securityFilterChain(@NotNull ServerHttpSecurity httpSecurity,
+                                                      @NotNull ReactiveAuthenticationManager authenticationManager) {
         httpSecurity
                 .cors(ServerHttpSecurity.CorsSpec::disable)
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .authenticationManager(authenticationManager)
+                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .authorizeExchange(exchanges -> exchanges
-//                        .pathMatchers("/droneia/api/v1/users/**").hasAuthority("ADMIN")
-//                        .pathMatchers("/droneia/api/v1/orders/**").hasAuthority("USER")
-                                .pathMatchers("/droneia/api/v1/auth/**").permitAll()
-                                .pathMatchers("/api-docs/**", "/api-docs").permitAll()
-                                .anyExchange().authenticated()
+                        .pathMatchers(HttpMethod.POST).permitAll()
+                        .pathMatchers(HttpMethod.GET).permitAll()
+                        .pathMatchers("/droneia/api/v1/auth/**").permitAll()
+                        .pathMatchers("/api-docs/**", "/api-docs").permitAll()
+                        .pathMatchers("/droneia/api/v1/drone/**").hasRole("ADMIN")
+                        .anyExchange().authenticated()
                 )
-                .addFilterAt(new JwtAuthWebFilter(jwtService), SecurityWebFiltersOrder.HTTP_BASIC);
+                .addFilterAt(new JwtAuthWebFilter(jwtService), SecurityWebFiltersOrder.AUTHENTICATION);
 
 
         return httpSecurity.build();

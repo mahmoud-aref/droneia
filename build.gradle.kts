@@ -36,10 +36,14 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     // tooling
-    implementation("com.auth0:java-jwt:4.4.0")
-
-    compileOnly("org.projectlombok:lombok")
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    implementation("org.projectlombok:lombok")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+
+    // security
+    implementation("com.auth0:java-jwt:4.4.0")
 
     // database
     runtimeOnly("org.postgresql:postgresql")
