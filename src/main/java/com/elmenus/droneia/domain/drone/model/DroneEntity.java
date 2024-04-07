@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,21 +24,25 @@ import java.util.UUID;
 public class DroneEntity {
 
     @Id
-    private UUID id;
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
     @Size(max = 100)
     private String serialNumber;
 
     @Enumerated(EnumType.STRING)
+    @NotBlank
     private DroneModel model;
 
-    @Size(max = 500)
+    @Max(500)
     private double maxWeight;
 
-    @Size(max = 100)
-    private int batteryPercentage;
+    @Max(100)
+    @Builder.Default
+    private int batteryPercentage = 100;
 
     @Enumerated(EnumType.STRING)
-    private DroneState state;
+    @Builder.Default
+    private DroneState state = DroneState.IDLE;
 
 }

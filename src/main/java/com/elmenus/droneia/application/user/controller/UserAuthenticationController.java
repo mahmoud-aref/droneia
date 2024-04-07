@@ -1,4 +1,4 @@
-package com.elmenus.droneia.application;
+package com.elmenus.droneia.application.user.controller;
 
 
 import com.elmenus.droneia.infrastructure.security.model.JWTResponse;
