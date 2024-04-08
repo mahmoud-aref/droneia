@@ -8,8 +8,16 @@ spring:
     username: droneia-root
     password: P@ssw0rd
 
+aws:
+  access-key: AKIA5FTZEVSEDBSI2KEK
+  secret-key: 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
+  s3:
+    bucket: droneia
+    region: us-east-1
+    endpoint: http://localhost:8080
 
 
 jwt:
   signing:
     key: i-am-signing-key
+

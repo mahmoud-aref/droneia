@@ -1,6 +1,5 @@
 package com.elmenus.droneia.infrastructure.security.filter;
 
-import com.elmenus.droneia.infrastructure.security.exceptions.UnauthorizedException;
 import com.elmenus.droneia.infrastructure.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -30,8 +29,9 @@ public class JwtAuthWebFilter implements WebFilter {
                     .flatMap(authentication -> chain.filter(exchange)
                             .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication)));
 
-        } // this is a workaround until fix loading the authentication context correctly
-        throw new UnauthorizedException("Unauthorized");
+        }
+
+        return chain.filter(exchange);
     }
 
     private String getTokenFromHeader(HttpHeaders headers) {

@@ -68,7 +68,7 @@ public class SecurityConfiguration {
                 .authenticationManager(authenticationManager)
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers(HttpMethod.POST).permitAll()
+                        .pathMatchers(HttpMethod.POST).permitAll() // this is a workaround until fix loading the authentication context correctly
                         .pathMatchers(HttpMethod.GET).permitAll()
                         .pathMatchers("/droneia/api/v1/auth/**").permitAll()
                         .pathMatchers("/api-docs/**", "/api-docs").permitAll()

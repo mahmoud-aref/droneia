@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 public interface DroneMapper {
     DroneMapper INSTANCE = Mappers.getMapper(DroneMapper.class);
 
-
     DroneEntity toEntity(DroneRegistrationRequest request);
+
+    DroneEntity toEntity(DroneUpdateRequest request);
 }
