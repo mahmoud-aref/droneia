@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
@@ -59,13 +60,20 @@ public class JwtServiceImpl implements JwtService {
 
         var authorities = roles == null
                 ? AuthorityUtils.NO_AUTHORITIES
-                : AuthorityUtils.commaSeparatedStringToAuthorityList(roles.toString());
+                : AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + roles.toString());
 
         User principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
+    public String getTokenFromHeader(String bearerToken) {
+        if (StringUtils.hasText(bearerToken)
+                && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 
     private String validateTokenAndReturnSubject(String token) {
         try {
@@ -81,4 +89,6 @@ public class JwtServiceImpl implements JwtService {
         JWTVerifier verifier = JWT.require(algorithm).build();
         return verifier.verify(token);
     }
+
+
 }

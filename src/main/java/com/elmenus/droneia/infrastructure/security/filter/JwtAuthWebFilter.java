@@ -5,12 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @RequiredArgsConstructor
 public class JwtAuthWebFilter implements WebFilter {
@@ -21,25 +19,20 @@ public class JwtAuthWebFilter implements WebFilter {
     public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange,
                                       @NonNull WebFilterChain chain) {
 
-        String token = getTokenFromHeader(exchange.getRequest().getHeaders());
-        if (token != null && jwtService.getUsernameFromToken(token) != null) {
-            return Mono.fromCallable(
-                            () -> jwtService.getAuthentication(token))
-                    .subscribeOn(Schedulers.boundedElastic())
-                    .flatMap(authentication -> chain.filter(exchange)
-                            .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication)));
-
+        var authHeaders = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
+        if (authHeaders != null && !authHeaders.isEmpty()) {
+            String token = jwtService.getTokenFromHeader(authHeaders.toString());
+            return ReactiveSecurityContextHolder
+                    .getContext()
+                    .doOnNext(securityContext -> {
+                        if (token != null && jwtService.getUsernameFromToken(token) != null) {
+                            var auth = jwtService.getAuthentication(token);
+                            securityContext.setAuthentication(auth);
+                        }
+                    }).then(chain.filter(exchange));
         }
-
         return chain.filter(exchange);
     }
 
-    private String getTokenFromHeader(HttpHeaders headers) {
-        String bearerToken = headers.getFirst(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken)
-                && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
+
 }
