@@ -1,6 +1,6 @@
 package com.elmenus.droneia.domain.drone.service;
 
-import com.elmenus.droneia.domain.common.BasicResponse;
+import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.drone.model.DroneEntity;
 import com.elmenus.droneia.domain.drone.model.DroneRegistrationRequest;
 import com.elmenus.droneia.domain.drone.model.DroneUpdateRequest;

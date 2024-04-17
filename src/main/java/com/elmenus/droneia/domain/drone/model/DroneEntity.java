@@ -24,8 +24,8 @@ import java.util.UUID;
 public class DroneEntity {
 
     @Id
-    @Builder.Default
-    private UUID id = UUID.randomUUID();
+    @org.springframework.data.annotation.Id
+    private UUID id;
 
     @Size(max = 100)
     private String serialNumber;

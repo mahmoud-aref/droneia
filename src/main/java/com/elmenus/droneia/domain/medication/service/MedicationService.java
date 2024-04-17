@@ -1,6 +1,6 @@
 package com.elmenus.droneia.domain.medication.service;
 
-import com.elmenus.droneia.domain.common.BasicResponse;
+import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.medication.model.MedicationEntity;
 import com.elmenus.droneia.domain.medication.model.MedicationRegistrationRequest;
 import com.elmenus.droneia.domain.medication.model.MedicationUpdateRequest;

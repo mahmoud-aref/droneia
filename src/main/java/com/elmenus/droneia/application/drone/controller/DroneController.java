@@ -1,6 +1,6 @@
 package com.elmenus.droneia.application.drone.controller;
 
-import com.elmenus.droneia.domain.common.BasicResponse;
+import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.drone.model.DroneEntity;
 import com.elmenus.droneia.domain.drone.model.DroneRegistrationRequest;
 import com.elmenus.droneia.domain.drone.model.DroneUpdateRequest;
@@ -21,7 +21,7 @@ public class DroneController {
     public static final String DRONE_PATH = "/droneia/api/v1/drone";
     public static final String DRONE_PATH_REGISTER = "/register";
     public static final String DRONE_PATH_UPDATE = "/update";
-    public static final String DRONE_PATH_DELETE = "/delete";
+    public static final String DRONE_PATH_DELETE = "/delete/{id}";
     public static final String DRONE_PATH_GET = "/get/{id}";
     public static final String DRONE_PATH_GET_ALL = "/get/all";
     public static final String DRONE_PATH_GET_ALL_BY_STATUS = "/get/all/{status}";
@@ -60,15 +60,13 @@ public class DroneController {
     }
 
     @GetMapping(DRONE_PATH_GET_ALL)
-    public Flux<ResponseEntity<BasicResponse<DroneEntity>>> getAllDrones() {
-        return droneService.getAllDrones()
-                .map(ResponseEntity::ok);
+    public Flux<BasicResponse<DroneEntity>> getAllDrones() {
+        return droneService.getAllDrones();
     }
 
     @GetMapping(DRONE_PATH_GET_ALL_BY_STATUS)
-    public Flux<ResponseEntity<BasicResponse<DroneEntity>>> getAllDronesByStatus(@PathVariable String status) {
-        return droneService.getAllDronesByStatus(status)
-                .map(ResponseEntity::ok);
+    public Flux<BasicResponse<DroneEntity>> getAllDronesByStatus(@PathVariable String status) {
+        return droneService.getAllDronesByStatus(status);
     }
 
     @PutMapping(DRONE_PATH_CHARGE)

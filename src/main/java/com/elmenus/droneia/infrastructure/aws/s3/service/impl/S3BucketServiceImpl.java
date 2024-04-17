@@ -1,6 +1,6 @@
 package com.elmenus.droneia.infrastructure.aws.s3.service.impl;
 
-import com.elmenus.droneia.domain.common.BasicResponse;
+import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.infrastructure.aws.s3.service.S3BucketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

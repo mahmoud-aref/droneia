@@ -8,9 +8,13 @@ spring:
     username: droneia-root
     password: P@ssw0rd
 
-aws:
-  access-key: AKIA5FTZEVSEDBSI2KEK
-  secret-key: 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
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+aws: # remove keys for github push
+  access-key:
+  secret-key:
   s3:
     bucket: droneia
     region: us-east-1

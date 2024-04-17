@@ -1,6 +1,8 @@
 package com.elmenus.droneia.infrastructure.security.config;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-@AllArgsConstructor
 public class ReactiveAuthManager extends UserDetailsRepositoryReactiveAuthenticationManager {
 
     private final PasswordEncoder passwordEncoder;
@@ -17,11 +18,13 @@ public class ReactiveAuthManager extends UserDetailsRepositoryReactiveAuthentica
     public ReactiveAuthManager(ReactiveUserDetailsService userDetailsService,
                                PasswordEncoder passwordEncoder) {
         super(userDetailsService);
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        super.setPasswordEncoder(passwordEncoder);
+        super.setPasswordEncoder(this.passwordEncoder);
     }
 
     @Override

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -33,6 +34,10 @@ public class SecurityConfiguration {
                 .securityContextRepository(securityContextRepository)
                 .authenticationManager(authenticationManager)
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(HttpMethod.DELETE).permitAll()
+                        .pathMatchers(HttpMethod.POST).permitAll()
+                        .pathMatchers(HttpMethod.GET).permitAll()
+                        .pathMatchers(HttpMethod.PUT).permitAll()
                         .pathMatchers("/droneia/api/v1/auth/**").permitAll()
                         .pathMatchers("/api-docs/**", "/api-docs").permitAll()
                         .pathMatchers("/test").hasRole("ADMIN")

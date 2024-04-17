@@ -1,4 +1,4 @@
-package com.elmenus.droneia.domain.common;
+package com.elmenus.droneia.domain.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,4 +10,5 @@ import lombok.Data;
 public class BasicResponse<T> {
     private String message;
     private T data;
+
 }

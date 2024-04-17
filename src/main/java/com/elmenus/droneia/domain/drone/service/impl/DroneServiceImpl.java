@@ -1,6 +1,7 @@
 package com.elmenus.droneia.domain.drone.service.impl;
 
-import com.elmenus.droneia.domain.common.BasicResponse;
+import com.elmenus.droneia.domain.common.model.BasicResponse;
+import com.elmenus.droneia.domain.common.exception.ResourceNotFoundException;
 import com.elmenus.droneia.domain.drone.model.*;
 import com.elmenus.droneia.domain.drone.service.DroneService;
 import com.elmenus.droneia.infrastructure.datasource.sql.drone.DroneRepository;
@@ -27,8 +28,10 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Mono<BasicResponse<DroneEntity>> updateDrone(DroneUpdateRequest droneEntity) {
-        return droneRepository.save(droneMapper.toEntity(droneEntity))
+    public Mono<BasicResponse<DroneEntity>> updateDrone(DroneUpdateRequest droneUpdateRequest) {
+        return droneRepository.findById(UUID.fromString(droneUpdateRequest.getId()))
+                .map(existingDrone -> droneMapper.toEntity(droneUpdateRequest, existingDrone))
+                .flatMap(droneRepository::save)
                 .flatMap(updatedDrone -> Mono.just(new BasicResponse<>(
                         "Drone updated successfully", updatedDrone
                 )));
@@ -66,6 +69,7 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public Mono<BasicResponse<DroneEntity>> getDroneData(String droneId) {
         return droneRepository.findById(UUID.fromString(droneId))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Drone not found")))
                 .map(droneEntity -> new BasicResponse<>("Drone data retrieved successfully", droneEntity));
     }
 
