@@ -24,6 +24,7 @@ public class DroneController {
     public static final String DRONE_PATH_DELETE = "/delete/{id}";
     public static final String DRONE_PATH_GET = "/get/{id}";
     public static final String DRONE_PATH_GET_ALL = "/get/all";
+    public static final String DRONE_PATH_AVAILABLE = "/get/all/available";
     public static final String DRONE_PATH_GET_ALL_BY_STATUS = "/get/all/{status}";
     public static final String DRONE_PATH_CHARGE = "/charge/{id}/{batteryPercentage}";
     public static final String DRONE_PATH_UPDATE_STATUS = "/update/status/{id}/{status}";
@@ -62,6 +63,11 @@ public class DroneController {
     @GetMapping(DRONE_PATH_GET_ALL)
     public Flux<BasicResponse<DroneEntity>> getAllDrones() {
         return droneService.getAllDrones();
+    }
+
+    @GetMapping(DRONE_PATH_AVAILABLE)
+    public Flux<BasicResponse<DroneEntity>> getAllAvailableDrones() {
+        return droneService.getAvailableDronesForLoading();
     }
 
     @GetMapping(DRONE_PATH_GET_ALL_BY_STATUS)

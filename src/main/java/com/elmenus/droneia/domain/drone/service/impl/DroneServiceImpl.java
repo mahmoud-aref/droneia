@@ -2,9 +2,12 @@ package com.elmenus.droneia.domain.drone.service.impl;
 
 import com.elmenus.droneia.domain.common.exception.ResourceNotFoundException;
 import com.elmenus.droneia.domain.common.model.BasicResponse;
+import com.elmenus.droneia.domain.drone.exception.DroneBusyException;
 import com.elmenus.droneia.domain.drone.model.*;
 import com.elmenus.droneia.domain.drone.service.DroneService;
+import com.elmenus.droneia.domain.order.model.OrderStatus;
 import com.elmenus.droneia.infrastructure.datasource.sql.drone.DroneRepository;
+import com.elmenus.droneia.infrastructure.datasource.sql.order.OrderRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class DroneServiceImpl implements DroneService {
 
     private final DroneMapper droneMapper;
     private final DroneRepository droneRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public Mono<BasicResponse<DroneEntity>> registerDrone(@Valid DroneRegistrationRequest request) {
@@ -40,9 +44,16 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public Mono<BasicResponse<Void>> deleteDrone(String droneId) {
-        // todo : handle cannot delete due to usage
-        return droneRepository.deleteById(UUID.fromString(droneId))
-                .then(Mono.just(new BasicResponse<>(DRONE_DELETED_SUCCESSFULLY, null)));
+        return droneRepository
+                .findById(UUID.fromString(droneId))
+                .flatMap(droneEntity -> {
+                    if (!DroneState.IDLE.equals(droneEntity.getState())) {
+                        return Mono.error(new DroneBusyException(CANNOT_DELETE_DUE_TO_BUSY));
+                    } else {
+                        return droneRepository.deleteById(UUID.fromString(droneId))
+                                .then(Mono.just(new BasicResponse<>(DRONE_DELETED_SUCCESSFULLY, null)));
+                    }
+                });
     }
 
     @Override
@@ -60,11 +71,18 @@ public class DroneServiceImpl implements DroneService {
     public Mono<BasicResponse<Void>> updateDroneStatus(String droneId, String status) {
         return droneRepository.findById(UUID.fromString(droneId))
                 .map(droneEntity -> {
-                    droneEntity.setState(DroneState.valueOf(status)); // handle not valid value
+                    if (DroneState.DELIVERED.toString().equals(status)) {
+                        // if drone is delivered we need to change order to finish
+                        orderRepository.findByDroneAndStatus(droneEntity, OrderStatus.FINISHED)
+                                .flatMap(orderEntity -> {
+                                    orderEntity.setStatus(OrderStatus.FINISHED);
+                                    return orderRepository.save(orderEntity);
+                                }); // no need to wait
+                    }
+                    droneEntity.setState(DroneState.valueOf(status));
                     return droneEntity;
-                })
-                .flatMap(droneRepository::save)
-                .then(Mono.just(new BasicResponse<>(DRONE_STATUS_UPDATED_SUCCESSFULLY, null)));
+                }).flatMap(droneRepository::save)
+                .flatMap(droneEntity -> Mono.just(new BasicResponse<>(DRONE_STATUS_UPDATED_SUCCESSFULLY, null)));
     }
 
     @Override
@@ -87,14 +105,9 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Mono<BasicResponse<Void>> loadMedication(String droneId, String medicationId, int quantity) {
-        return null;
+    public Flux<BasicResponse<DroneEntity>> getAvailableDronesForLoading() {
+        return droneRepository.findAllByState(DroneState.IDLE)
+                .map(droneEntity -> new BasicResponse<>(DRONE_DATA_RETRIEVED_SUCCESSFULLY, droneEntity));
     }
-
-    @Override
-    public Mono<BasicResponse<Void>> unloadMedication(String droneId, String medicationId, int quantity) {
-        return null;
-    }
-
 
 }

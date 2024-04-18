@@ -17,6 +17,7 @@ public interface DroneService {
     String DRONE_CHARGED_SUCCESSFULLY = "Drone charged successfully";
     String DRONE_STATUS_UPDATED_SUCCESSFULLY = "Drone status updated successfully";
     String DRONE_DATA_RETRIEVED_SUCCESSFULLY = "Drone data retrieved successfully";
+    String CANNOT_DELETE_DUE_TO_BUSY = "Cannot Delete Drone In Order";
 
     Mono<BasicResponse<DroneEntity>> registerDrone(DroneRegistrationRequest request);
 
@@ -34,7 +35,6 @@ public interface DroneService {
 
     Flux<BasicResponse<DroneEntity>> getAllDronesByStatus(String status);
 
-    Mono<BasicResponse<Void>> loadMedication(String droneId, String medicationId, int quantity);
+    Flux<BasicResponse<DroneEntity>> getAvailableDronesForLoading();
 
-    Mono<BasicResponse<Void>> unloadMedication(String droneId, String medicationId, int quantity);
 }
