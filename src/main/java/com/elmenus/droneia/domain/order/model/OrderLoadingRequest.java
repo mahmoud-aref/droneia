@@ -2,12 +2,11 @@ package com.elmenus.droneia.domain.order.model;
 
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @Builder
 @Data
 public class OrderLoadingRequest {
     private String droneId;
-    private List<MedicationLoad> medicationItems;
+    private Flux<MedicationLoad> medicationItems;
 }

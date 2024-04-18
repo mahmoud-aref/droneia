@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class MedicationLoad {
     private String medicationId;
-    private long medicationQuantity;
+    private int medicationQuantity;
 }

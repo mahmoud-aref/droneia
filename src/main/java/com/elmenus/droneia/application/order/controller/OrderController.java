@@ -4,7 +4,6 @@ import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.order.model.OrderEntity;
 import com.elmenus.droneia.domain.order.model.OrderLoadingRequest;
 import com.elmenus.droneia.domain.order.service.OrderService;
-import com.elmenus.droneia.domain.order.validation.ValidLoad;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,7 @@ public class OrderController {
 
     @PostMapping(ORDER_PATH_CREATE)
     public Mono<ResponseEntity<BasicResponse<OrderEntity>>> createOrder(
-            @ValidLoad @RequestBody Mono<OrderLoadingRequest> monoRequest
+            @RequestBody Mono<OrderLoadingRequest> monoRequest
     ) {
         return monoRequest.flatMap(
                 request -> orderService.createOrder(request)

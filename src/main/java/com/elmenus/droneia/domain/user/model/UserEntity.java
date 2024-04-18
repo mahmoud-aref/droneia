@@ -1,15 +1,12 @@
 package com.elmenus.droneia.domain.user.model;
 
 import com.elmenus.droneia.infrastructure.security.model.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
@@ -19,7 +16,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-@Entity
 public class UserEntity {
 
     @Id
@@ -35,7 +31,6 @@ public class UserEntity {
 
     private boolean active;
 
-    @Enumerated(EnumType.STRING)
     private Role role;
 
 }

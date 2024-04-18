@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 public interface OrderService {
 
     String ORDER_CREATED_SUCCESSFULLY = "Order Created Successfully";
+    String DRONE_LOADED_SUCCESSFULLY = "Drone Loaded Successfully";
     String ORDER_RETRIEVED_SUCCESSFULLY = "Order Retrieved Successfully";
     String BATTERY_LOW_EXCEPTION_MESSAGE = "Drone Battery Low Less Than 25%";
     String DRONE_IS_BUSY_EXCEPTION = "Drone Is Busy with another order";

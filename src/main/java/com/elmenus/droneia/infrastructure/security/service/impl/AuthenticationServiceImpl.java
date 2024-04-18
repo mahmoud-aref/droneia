@@ -9,7 +9,6 @@ import com.elmenus.droneia.infrastructure.security.model.UserRegistrationRequest
 import com.elmenus.droneia.infrastructure.security.service.AuthenticationService;
 import com.elmenus.droneia.infrastructure.security.service.JwtService;
 import com.elmenus.droneia.infrastructure.datasource.sql.user.UserRepository;
-import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +26,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ReactiveAuthenticationManager authenticationManager;
 
     @Override
-    @PrePersist
     public Mono<JWTResponse> registerUser(UserRegistrationRequest request) {
         return userRepository.existsByUsername(request.getUsername())
                 .flatMap(userNameExist -> {

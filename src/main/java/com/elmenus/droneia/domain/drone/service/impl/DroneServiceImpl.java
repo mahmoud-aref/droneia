@@ -73,7 +73,7 @@ public class DroneServiceImpl implements DroneService {
                 .map(droneEntity -> {
                     if (DroneState.DELIVERED.toString().equals(status)) {
                         // if drone is delivered we need to change order to finish
-                        orderRepository.findByDroneAndStatus(droneEntity, OrderStatus.FINISHED)
+                        orderRepository.findByDroneIdAndStatus(String.valueOf(droneEntity.getId()), OrderStatus.FINISHED)
                                 .flatMap(orderEntity -> {
                                     orderEntity.setStatus(OrderStatus.FINISHED);
                                     return orderRepository.save(orderEntity);

@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS drones
     id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     serial_number      VARCHAR(100),
     model              VARCHAR(255) NOT NULL,
-    max_weight         DOUBLE PRECISION CHECK (maxWeight <= 500),
-    battery_percentage INTEGER          DEFAULT 100 CHECK (batteryPercentage <= 100),
+    max_weight         DOUBLE PRECISION CHECK (max_weight <= 500),
+    battery_percentage INTEGER          DEFAULT 100 CHECK (battery_percentage <= 100),
     state              VARCHAR(255)     DEFAULT 'IDLE'
 );
 
@@ -31,14 +31,15 @@ CREATE TABLE IF NOT EXISTS orders
 (
     id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     drone_id UUID,
-    state              VARCHAR(255)     DEFAULT 'ACTIVE'
+    state    VARCHAR(255)     DEFAULT 'ACTIVE'
 );
 
 CREATE TABLE IF NOT EXISTS order_medications
 (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id      UUID,
     medication_id UUID,
-    PRIMARY KEY (order_id, medication_id)
+    quantity      INTEGER
 );
 
 ALTER TABLE orders
