@@ -7,7 +7,7 @@ import java.util.List;
 
 @Builder
 @Data
-public class OrderCreationRequest {
+public class OrderLoadingRequest {
     private String droneId;
-    private List<String> medicationIds;
+    private List<MedicationLoad> medicationItems;
 }

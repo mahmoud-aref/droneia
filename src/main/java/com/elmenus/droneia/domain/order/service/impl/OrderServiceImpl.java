@@ -4,10 +4,12 @@ import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.drone.exception.DroneBusyException;
 import com.elmenus.droneia.domain.drone.exception.LowBatteryException;
 import com.elmenus.droneia.domain.drone.model.DroneState;
-import com.elmenus.droneia.domain.order.model.OrderCreationRequest;
+import com.elmenus.droneia.domain.order.model.MedicationLoad;
+import com.elmenus.droneia.domain.order.model.OrderLoadingRequest;
 import com.elmenus.droneia.domain.order.model.OrderEntity;
 import com.elmenus.droneia.domain.order.model.OrderStatus;
 import com.elmenus.droneia.domain.order.service.OrderService;
+import com.elmenus.droneia.domain.order.validation.ValidLoad;
 import com.elmenus.droneia.infrastructure.datasource.sql.drone.DroneRepository;
 import com.elmenus.droneia.infrastructure.datasource.sql.medication.MedicationRepository;
 import com.elmenus.droneia.infrastructure.datasource.sql.order.OrderRepository;
@@ -29,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final MedicationRepository medicationRepository;
 
     @Override
-    public Mono<BasicResponse<OrderEntity>> createOrder(OrderCreationRequest request) {
+    public Mono<BasicResponse<OrderEntity>> createOrder(@ValidLoad OrderLoadingRequest request) {
         return droneRepository
                 .findById(UUID.fromString(request.getDroneId()))
                 .flatMap(droneEntity -> {
@@ -39,8 +41,9 @@ public class OrderServiceImpl implements OrderService {
                         return Mono.error(new DroneBusyException(DRONE_IS_BUSY_EXCEPTION));
                     } else {
                         return medicationRepository.findAllById(
-                                        request.getMedicationIds()
+                                        request.getMedicationItems()
                                                 .stream()
+                                                .map(MedicationLoad::getMedicationId)
                                                 .map(UUID::fromString)
                                                 .toList()
                                 ).collect(toSet())
