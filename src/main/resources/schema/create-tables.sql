@@ -24,6 +24,6 @@ CREATE TABLE medications
     name VARCHAR(255) CHECK (name ~ '^[a-zA-Z0-9_-]+$'),
     weight DOUBLE PRECISION,
     code VARCHAR(255) CHECK (code ~ '^[A-Z0-9_]+$'),
-    imageUrl VARCHAR(255)
+    image_url VARCHAR(255)
 );
 

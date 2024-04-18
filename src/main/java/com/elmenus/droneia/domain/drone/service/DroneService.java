@@ -10,6 +10,14 @@ import reactor.core.publisher.Mono;
 
 public interface DroneService {
 
+    // easy for test , in prod can be moved to localization provider
+    String DRONE_REGISTERED_SUCCESSFULLY = "Drone registered successfully";
+    String DRONE_UPDATED_SUCCESSFULLY = "Drone updated successfully";
+    String DRONE_DELETED_SUCCESSFULLY = "Drone deleted successfully";
+    String DRONE_CHARGED_SUCCESSFULLY = "Drone charged successfully";
+    String DRONE_STATUS_UPDATED_SUCCESSFULLY = "Drone status updated successfully";
+    String DRONE_DATA_RETRIEVED_SUCCESSFULLY = "Drone data retrieved successfully";
+
     Mono<BasicResponse<DroneEntity>> registerDrone(DroneRegistrationRequest request);
 
     Mono<BasicResponse<DroneEntity>> updateDrone(DroneUpdateRequest droneEntity);

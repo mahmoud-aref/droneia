@@ -34,6 +34,7 @@ dependencies {
     // testing dependencies
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 
     // tooling
     implementation("org.mapstruct:mapstruct:1.5.5.Final")

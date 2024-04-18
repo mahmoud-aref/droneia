@@ -1,10 +1,11 @@
 package com.elmenus.droneia.domain.drone.service.impl;
 
-import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.common.exception.ResourceNotFoundException;
+import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.drone.model.*;
 import com.elmenus.droneia.domain.drone.service.DroneService;
 import com.elmenus.droneia.infrastructure.datasource.sql.drone.DroneRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -20,10 +21,10 @@ public class DroneServiceImpl implements DroneService {
     private final DroneRepository droneRepository;
 
     @Override
-    public Mono<BasicResponse<DroneEntity>> registerDrone(DroneRegistrationRequest request) {
+    public Mono<BasicResponse<DroneEntity>> registerDrone(@Valid DroneRegistrationRequest request) {
         return droneRepository.save(droneMapper.toEntity(request))
                 .flatMap(savedDrone -> Mono.just(new BasicResponse<>(
-                        "Drone registered successfully", savedDrone
+                        DRONE_REGISTERED_SUCCESSFULLY, savedDrone
                 )));
     }
 
@@ -33,7 +34,7 @@ public class DroneServiceImpl implements DroneService {
                 .map(existingDrone -> droneMapper.toEntity(droneUpdateRequest, existingDrone))
                 .flatMap(droneRepository::save)
                 .flatMap(updatedDrone -> Mono.just(new BasicResponse<>(
-                        "Drone updated successfully", updatedDrone
+                        DRONE_UPDATED_SUCCESSFULLY, updatedDrone
                 )));
     }
 
@@ -41,7 +42,7 @@ public class DroneServiceImpl implements DroneService {
     public Mono<BasicResponse<Void>> deleteDrone(String droneId) {
         // todo : handle cannot delete due to usage
         return droneRepository.deleteById(UUID.fromString(droneId))
-                .then(Mono.just(new BasicResponse<>("Drone deleted successfully", null)));
+                .then(Mono.just(new BasicResponse<>(DRONE_DELETED_SUCCESSFULLY, null)));
     }
 
     @Override
@@ -52,7 +53,7 @@ public class DroneServiceImpl implements DroneService {
                     return droneEntity;
                 })
                 .flatMap(droneRepository::save)
-                .then(Mono.just(new BasicResponse<>("Drone charged successfully", null)));
+                .then(Mono.just(new BasicResponse<>(DRONE_CHARGED_SUCCESSFULLY, null)));
     }
 
     @Override
@@ -63,26 +64,26 @@ public class DroneServiceImpl implements DroneService {
                     return droneEntity;
                 })
                 .flatMap(droneRepository::save)
-                .then(Mono.just(new BasicResponse<>("Drone status updated successfully", null)));
+                .then(Mono.just(new BasicResponse<>(DRONE_STATUS_UPDATED_SUCCESSFULLY, null)));
     }
 
     @Override
     public Mono<BasicResponse<DroneEntity>> getDroneData(String droneId) {
         return droneRepository.findById(UUID.fromString(droneId))
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Drone not found")))
-                .map(droneEntity -> new BasicResponse<>("Drone data retrieved successfully", droneEntity));
+                .map(droneEntity -> new BasicResponse<>(DRONE_DATA_RETRIEVED_SUCCESSFULLY, droneEntity));
     }
 
     @Override
     public Flux<BasicResponse<DroneEntity>> getAllDrones() {
         return droneRepository.findAll()
-                .map(droneEntity -> new BasicResponse<>("Drone data retrieved successfully", droneEntity));
+                .map(droneEntity -> new BasicResponse<>(DRONE_DATA_RETRIEVED_SUCCESSFULLY, droneEntity));
     }
 
     @Override
     public Flux<BasicResponse<DroneEntity>> getAllDronesByStatus(String status) {
         return droneRepository.findAllByState(DroneState.valueOf(status)) // handle invalid status
-                .map(droneEntity -> new BasicResponse<>("Drone data retrieved successfully", droneEntity));
+                .map(droneEntity -> new BasicResponse<>(DRONE_DATA_RETRIEVED_SUCCESSFULLY, droneEntity));
     }
 
     @Override

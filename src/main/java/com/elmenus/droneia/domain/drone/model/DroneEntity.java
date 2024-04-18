@@ -7,16 +7,14 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
 @Data
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "drones")
@@ -45,4 +43,14 @@ public class DroneEntity {
     @Builder.Default
     private DroneState state = DroneState.IDLE;
 
+    // toString - the Autistic toString of lombok is adding class name and no way to remove it :)
+    @Override
+    public String toString() {
+        return "{id=" + this.getId() +
+                ", serialNumber=" + this.getSerialNumber() +
+                ", model=" + this.getModel() +
+                ", maxWeight=" + this.getMaxWeight() +
+                ", batteryPercentage=" + this.getBatteryPercentage() +
+                ", state=" + this.getState() + "}";
+    }
 }

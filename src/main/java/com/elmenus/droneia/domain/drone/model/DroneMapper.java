@@ -8,7 +8,11 @@ import org.mapstruct.factory.Mappers;
 public interface DroneMapper {
     DroneMapper INSTANCE = Mappers.getMapper(DroneMapper.class);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "batteryPercentage", ignore = true)
+    @Mapping(target = "state", ignore = true)
     DroneEntity toEntity(DroneRegistrationRequest request);
+
 
     DroneEntity toEntity(DroneUpdateRequest request);
 
@@ -16,5 +20,7 @@ public interface DroneMapper {
     @Mapping(target = "serialNumber", source = "droneUpdateRequest.serialNumber")
     @Mapping(target = "model", source = "droneUpdateRequest.model")
     @Mapping(target = "maxWeight", source = "droneUpdateRequest.maxWeight")
+    @Mapping(target = "batteryPercentage", source = "droneUpdateRequest.batteryPercentage")
+    @Mapping(target = "state", source = "droneUpdateRequest.state")
     DroneEntity toEntity(DroneUpdateRequest droneUpdateRequest, DroneEntity existingDrone);
 }

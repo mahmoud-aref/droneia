@@ -20,6 +20,7 @@ import java.util.UUID;
 public class MedicationEntity {
 
     @Id
+    @org.springframework.data.annotation.Id
     private UUID id;
 
     @Pattern(regexp = "^[a-zA-Z0-9_-]+$",

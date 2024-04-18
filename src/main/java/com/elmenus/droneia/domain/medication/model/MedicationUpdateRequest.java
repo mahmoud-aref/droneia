@@ -1,7 +1,9 @@
 package com.elmenus.droneia.domain.medication.model;
 
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
+@Data
 public class MedicationUpdateRequest {
     private String id;
     @Pattern(regexp = "^[a-zA-Z0-9_-]+$",
