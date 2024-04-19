@@ -1,6 +1,6 @@
 package com.elmenus.droneia.domain.order.model;
 
-public enum OrderStatus {
+public enum OrderState {
     ACTIVE,
     FINISHED,
 }

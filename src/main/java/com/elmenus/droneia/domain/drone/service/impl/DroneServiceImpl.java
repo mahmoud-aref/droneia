@@ -5,7 +5,7 @@ import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.drone.exception.DroneBusyException;
 import com.elmenus.droneia.domain.drone.model.*;
 import com.elmenus.droneia.domain.drone.service.DroneService;
-import com.elmenus.droneia.domain.order.model.OrderStatus;
+import com.elmenus.droneia.domain.order.model.OrderState;
 import com.elmenus.droneia.infrastructure.datasource.sql.drone.DroneRepository;
 import com.elmenus.droneia.infrastructure.datasource.sql.order.OrderRepository;
 import jakarta.validation.Valid;
@@ -68,21 +68,25 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Mono<BasicResponse<Void>> updateDroneStatus(String droneId, String status) {
-        return droneRepository.findById(UUID.fromString(droneId))
-                .map(droneEntity -> {
-                    if (DroneState.DELIVERED.toString().equals(status)) {
-                        // if drone is delivered we need to change order to finish
-                        orderRepository.findByDroneIdAndStatus(String.valueOf(droneEntity.getId()), OrderStatus.FINISHED)
-                                .flatMap(orderEntity -> {
-                                    orderEntity.setStatus(OrderStatus.FINISHED);
-                                    return orderRepository.save(orderEntity);
-                                }); // no need to wait
-                    }
-                    droneEntity.setState(DroneState.valueOf(status));
-                    return droneEntity;
-                }).flatMap(droneRepository::save)
-                .flatMap(droneEntity -> Mono.just(new BasicResponse<>(DRONE_STATUS_UPDATED_SUCCESSFULLY, null)));
+    public Mono<BasicResponse<Void>> updateDroneStatus(String droneId, String state) {
+        if (DroneState.DELIVERED.toString().equals(state)) {
+            return orderRepository.findByDroneId(UUID.fromString(droneId))
+                    .flatMap(orderEntity -> {
+                        orderEntity.setState(OrderState.FINISHED);
+                        return orderRepository.save(orderEntity);
+                    }).flatMap(i -> updateDroneState(UUID.fromString(droneId), DroneState.DELIVERED));
+        } else {
+            return updateDroneState(UUID.fromString(droneId), DroneState.valueOf(state));
+        }
+    }
+
+    private Mono<BasicResponse<Void>> updateDroneState(UUID droneId, DroneState state) {
+        return droneRepository
+                .findById(droneId)
+                .flatMap(drone -> {
+                    drone.setState(state);
+                    return droneRepository.save(drone);
+                }).flatMap(i -> Mono.just(new BasicResponse<>(DRONE_STATUS_UPDATED_SUCCESSFULLY, null)));
     }
 
     @Override

@@ -12,7 +12,7 @@ spring:
     hibernate:
       ddl-auto: update
 
-aws: # remove keys for github push
+aws: # remove keys for GitHub push
   access-key:
   secret-key:
   s3:

@@ -20,8 +20,8 @@ public class OrderEntity {
     @Id
     private UUID id;
 
-    private String droneId;
+    private UUID droneId;
 
-    private OrderStatus status = OrderStatus.ACTIVE;
+    private OrderState state = OrderState.ACTIVE;
 
 }
