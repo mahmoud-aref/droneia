@@ -25,3 +25,5 @@ jwt:
   signing:
     key: i-am-signing-key
 
+drone:
+  battery-drain-rate: 10000

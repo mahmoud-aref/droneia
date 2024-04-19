@@ -35,6 +35,13 @@ public class DroneEntity {
     @Builder.Default
     private DroneState state = DroneState.IDLE;
 
+    public DroneEntity drainBattery() {
+        if (this.batteryPercentage != 0) {
+            this.batteryPercentage -= 1;
+        }
+        return this;
+    }
+
     // toString - the Autistic toString of lombok is adding class name and no way to remove it :)
     @Override
     public String toString() {
@@ -44,5 +51,9 @@ public class DroneEntity {
                 ", maxWeight=" + this.getMaxWeight() +
                 ", batteryPercentage=" + this.getBatteryPercentage() +
                 ", state=" + this.getState() + "}";
+    }
+
+    public String batteryDrainLogMessage() {
+        return "Drone " + this.getId() + " battery drained to " + this.getBatteryPercentage() + "%";
     }
 }
