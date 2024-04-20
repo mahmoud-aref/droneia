@@ -38,7 +38,7 @@ public class DroneControllerTest {
         var droneRegistrationRequest = DroneRegistrationRequest
                 .builder()
                 .serialNumber("1234")
-                .model(DroneModel.LIGHT_WEIGHT.toString())
+                .model(DroneModel.valueOf(DroneModel.LIGHT_WEIGHT.toString()))
                 .maxWeight(200.0)
                 .build();
 

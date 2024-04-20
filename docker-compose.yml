@@ -1,9 +1,10 @@
-version: '3.7'
 #
 # database container
 services:
   droneia-db:
-    image: postgres
+    build:
+      context: .
+      dockerfile: docker/db/Dockerfile
     container_name: droneia-db
     environment:
       POSTGRES_USER: droneia-root
@@ -14,5 +15,21 @@ services:
     volumes:
       - droneia-db:/var/lib/postgresql/data
 
+  backend:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+    container_name: droneia-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - droneia-db
+    environment:
+      DATABASE_URL: postgresql://droneia-db:5432/droneia-db
+      DATABASE_NAME: droneia-db
+      DATABASE_USER: droneia-root
+      DATABASE_PASSWORD: P@ssw0rd
+
+# volumes
 volumes:
   droneia-db:

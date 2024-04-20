@@ -4,9 +4,9 @@ spring:
   webflux:
     base-path: /elmenus
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/droneia-db
-    username: droneia-root
-    password: P@ssw0rd
+    url: r2dbc:${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     hibernate:

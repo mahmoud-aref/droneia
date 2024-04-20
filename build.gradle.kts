@@ -2,7 +2,9 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
+    jacoco
 }
+
 
 group = "com.elmenus"
 version = "0.0.1-SNAPSHOT"
@@ -53,6 +55,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.cucumber:cucumber-junit:7.17.0")
+    testImplementation("io.cucumber:cucumber-java:7.17.0")
+    testImplementation("io.cucumber:cucumber-spring:7.17.0")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:r2dbc")
@@ -69,6 +73,7 @@ dependencies {
     implementation("software.amazon.awssdk:netty-nio-client:2.18.41")
     implementation("io.cucumber:cucumber-java:7.17.0")
     implementation("io.cucumber:cucumber-spring:7.17.0")
+    implementation("io.cucumber:cucumber-junit:7.17.0")
 
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
@@ -88,3 +93,33 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+// cucumber task configuration
+configurations {
+    register("cucumberRuntime") {
+        extendsFrom(testImplementation.get())
+    }
+}
+tasks {
+    val runCucumberTest by registering {
+        doLast {
+            runCucumber()
+        }
+    }
+}
+
+
+fun runCucumber() {
+    javaexec {
+        val main = "io.cucumber.core.cli.Main"
+        val cucumberRuntime = configurations["cucumberRuntime"]
+        val threads = Runtime.getRuntime().availableProcessors().div(2).toString() ?: "1"
+        mainClass.set(main)
+        classpath = cucumberRuntime + sourceSets["behavioralTest"].runtimeClasspath
+        args = mutableListOf(
+            "--threads", threads,
+            "--plugin", "pretty",
+            "--plugin", "html:target/cucumber-report.html"
+        )
+        args(args)
+    }
+}
