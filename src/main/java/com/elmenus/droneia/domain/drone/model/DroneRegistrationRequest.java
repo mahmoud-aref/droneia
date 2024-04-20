@@ -10,7 +10,7 @@ import lombok.Data;
 public class DroneRegistrationRequest {
     @Size(max = 100)
     private String serialNumber;
-    private String model;
+    private DroneModel model;
     @Max(500)
     private double maxWeight;
 }

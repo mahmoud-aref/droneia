@@ -23,4 +23,6 @@ public interface DroneMapper {
     @Mapping(target = "batteryPercentage", source = "droneUpdateRequest.batteryPercentage")
     @Mapping(target = "state", source = "droneUpdateRequest.state")
     DroneEntity toEntity(DroneUpdateRequest droneUpdateRequest, DroneEntity existingDrone);
+
+
 }

@@ -17,9 +17,27 @@ configurations {
     }
 }
 
+ext {
+    set("testcontainers.version", "1.19.3")
+}
+
 repositories {
     mavenCentral()
 }
+
+tasks.withType<Copy> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+sourceSets {
+    create("behavioralTest") {
+        java.srcDir("src/behavioralTest/java")
+        resources.srcDir("src/behavioralTest/resources")
+        runtimeClasspath += sourceSets["main"].runtimeClasspath + sourceSets["test"].runtimeClasspath
+        compileClasspath += sourceSets["main"].compileClasspath + sourceSets["test"].compileClasspath
+    }
+}
+
 
 dependencies {
 
@@ -34,12 +52,24 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("io.cucumber:cucumber-junit:7.17.0")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:r2dbc")
+    testImplementation("io.rest-assured:rest-assured:5.4.0")
+    testImplementation("io.rest-assured:rest-assured-common:5.4.0")
+    testImplementation("io.rest-assured:xml-path:5.4.0")
+    testImplementation("io.rest-assured:json-path:5.4.0")
+
 
     // tooling
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     implementation("org.projectlombok:lombok")
     implementation("software.amazon.awssdk:s3:2.18.41")
     implementation("software.amazon.awssdk:netty-nio-client:2.18.41")
+    implementation("io.cucumber:cucumber-java:7.17.0")
+    implementation("io.cucumber:cucumber-spring:7.17.0")
+
 
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     annotationProcessor("org.projectlombok:lombok")
@@ -57,3 +87,4 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+

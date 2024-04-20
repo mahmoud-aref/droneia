@@ -9,6 +9,7 @@ public interface MedicationMapper {
 
     MedicationMapper INSTANCE = Mappers.getMapper(MedicationMapper.class);
 
+    @Mapping(target = "id", ignore = true)
     MedicationEntity toEntity(MedicationRegistrationRequest request);
 
     MedicationEntity toEntity(MedicationUpdateRequest request);

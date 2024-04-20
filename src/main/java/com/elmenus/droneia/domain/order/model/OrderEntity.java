@@ -22,6 +22,7 @@ public class OrderEntity {
 
     private UUID droneId;
 
+    @Builder.Default
     private OrderState state = OrderState.ACTIVE;
 
 }
