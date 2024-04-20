@@ -20,14 +20,7 @@ medications.
 This project is a Spring Boot application that uses R2DBC for reactive database access and WebFlux for handling HTTP
 requests in a non-blocking way. The application is written in Java and uses Gradle(kotlin) as a build tool.
 
-## Table of Contents 📚
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [Tests](#tests)
-- [Credits](#credits)
-- [License](#license)
+---
 
 ## Installation 🛠️
 
