@@ -1,8 +1,10 @@
 package com.elmenus.droneia.domain.medication.model;
 
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Data
 public class MedicationRegistrationRequest {
     @Pattern(regexp = "^[a-zA-Z0-9_-]+$",

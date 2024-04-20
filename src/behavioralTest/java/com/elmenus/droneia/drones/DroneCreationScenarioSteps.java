@@ -16,10 +16,10 @@ import static io.restassured.RestAssured.with;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DroneCreationFeatureSteps {
+public class DroneCreationScenarioSteps {
 
     private DroneRegistrationRequest droneRegistrationRequest;
-    private BasicResponse<DroneEntity> responseBody;
+    private BasicResponse<DroneEntity> droneResponseBody;
     private UUID droneId;
 
     @Given("the user provides valid drone creation request")
@@ -29,7 +29,7 @@ public class DroneCreationFeatureSteps {
 
     @When("the user sends a POST request to {string}")
     public void the_user_sends_a_post_request_to(String path) {
-        responseBody = with()
+        droneResponseBody = with()
                 .body(droneRegistrationRequest)
                 .contentType(ContentType.JSON)
                 .when()
@@ -42,13 +42,13 @@ public class DroneCreationFeatureSteps {
 
     @And("the response should contain {string}")
     public void the_response_should_contain(String message) {
-        assertEquals(message, responseBody.getMessage());
+        assertEquals(message, droneResponseBody.getMessage());
     }
 
     @And("the response should contain drone id")
     public void theResponseShouldContainDroneId() {
-        assertNotNull(responseBody.getData().getId());
-        droneId = responseBody.getData().getId();
+        assertNotNull(droneResponseBody.getData().getId());
+        droneId = droneResponseBody.getData().getId();
     }
 
 
@@ -70,6 +70,6 @@ public class DroneCreationFeatureSteps {
                 .request("GET", path)
                 .then()
                 .statusCode(200);
-        assertEquals(responseBody.getData().getId(), droneId);
+        assertEquals(droneResponseBody.getData().getId(), droneId);
     }
 }
