@@ -15,5 +15,5 @@ public class DroneUpdateRequest {
     @Max(500)
     private double maxWeight;
     private String state;
-    private String batteryPercentage;
+    private int batteryPercentage;
 }

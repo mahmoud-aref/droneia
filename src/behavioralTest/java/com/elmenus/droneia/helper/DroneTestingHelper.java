@@ -1,9 +1,7 @@
-package com.elmenus.droneia.factory;
+package com.elmenus.droneia.helper;
 
 import com.elmenus.droneia.domain.common.model.BasicResponse;
-import com.elmenus.droneia.domain.drone.model.DroneEntity;
-import com.elmenus.droneia.domain.drone.model.DroneModel;
-import com.elmenus.droneia.domain.drone.model.DroneRegistrationRequest;
+import com.elmenus.droneia.domain.drone.model.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.UUID;
@@ -15,6 +13,17 @@ public class DroneTestingHelper {
                 .serialNumber(UUID.randomUUID().toString())
                 .model(DroneModel.LIGHT_WEIGHT)
                 .maxWeight(100)
+                .build();
+    }
+
+    public static DroneUpdateRequest getMockLowBatteryDroneUpdateRequest(String droneId) {
+        return DroneUpdateRequest.builder()
+                .id(droneId)
+                .serialNumber(UUID.randomUUID().toString())
+                .model(DroneModel.LIGHT_WEIGHT.toString())
+                .maxWeight(100.0)
+                .state(DroneState.IDLE.name())
+                .batteryPercentage(10)
                 .build();
     }
 

@@ -3,7 +3,7 @@ package com.elmenus.droneia.drones;
 import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.drone.model.DroneEntity;
 import com.elmenus.droneia.domain.drone.model.DroneRegistrationRequest;
-import com.elmenus.droneia.factory.DroneTestingHelper;
+import com.elmenus.droneia.helper.DroneTestingHelper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

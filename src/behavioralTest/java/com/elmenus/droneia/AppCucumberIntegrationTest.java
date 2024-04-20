@@ -1,4 +1,4 @@
-package com.elmenus.droneia.configs;
+package com.elmenus.droneia;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;

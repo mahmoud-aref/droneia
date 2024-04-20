@@ -1,4 +1,4 @@
-package com.elmenus.droneia.factory;
+package com.elmenus.droneia.helper;
 
 import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.order.model.MedicationLoad;
@@ -31,4 +31,6 @@ public class OrderTestingHelper {
     public static class OrderEntityType extends TypeReference<BasicResponse<OrderEntity>> {
     }
 
+    public static class ErrorResponseType extends TypeReference<BasicResponse<String>> {
+    }
 }

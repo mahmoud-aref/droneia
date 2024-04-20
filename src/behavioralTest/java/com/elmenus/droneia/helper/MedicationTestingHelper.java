@@ -1,4 +1,4 @@
-package com.elmenus.droneia.factory;
+package com.elmenus.droneia.helper;
 
 import com.elmenus.droneia.domain.common.model.BasicResponse;
 import com.elmenus.droneia.domain.medication.model.MedicationEntity;

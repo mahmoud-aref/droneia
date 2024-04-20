@@ -7,9 +7,9 @@ import com.elmenus.droneia.domain.medication.model.MedicationEntity;
 import com.elmenus.droneia.domain.order.model.OrderEntity;
 import com.elmenus.droneia.domain.order.model.OrderResponse;
 import com.elmenus.droneia.domain.order.model.OrderState;
-import com.elmenus.droneia.factory.DroneTestingHelper;
-import com.elmenus.droneia.factory.MedicationTestingHelper;
-import com.elmenus.droneia.factory.OrderTestingHelper;
+import com.elmenus.droneia.helper.DroneTestingHelper;
+import com.elmenus.droneia.helper.MedicationTestingHelper;
+import com.elmenus.droneia.helper.OrderTestingHelper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -23,8 +23,9 @@ public class OrderCreationScenarioSteps {
 
     private BasicResponse<DroneEntity> droneResponseBody;
     private BasicResponse<MedicationEntity> medicationResponseBody;
-    private BasicResponse<OrderEntity> orderEntityBasicResponse;
     private BasicResponse<OrderResponse> orderResponseBasicResponse;
+
+    private BasicResponse<String> errorResponse;
 
 
     @Given("Drone valid for the load after POST request {string}")
@@ -96,7 +97,7 @@ public class OrderCreationScenarioSteps {
 
     @And("Order should be in the active state when GET request {string}")
     public void orderShouldBeInTheActiveStateWhenGETRequest(String path) {
-        orderEntityBasicResponse = with()
+        BasicResponse<OrderEntity> orderEntityBasicResponse = with()
                 .pathParam("id", orderResponseBasicResponse.getData().getOrderId())
                 .when()
                 .request("GET", path)
@@ -108,5 +109,40 @@ public class OrderCreationScenarioSteps {
                 orderEntityBasicResponse.getData().getState(),
                 OrderState.ACTIVE
         );
+    }
+
+    @When("User creates another order POST request {string}")
+    public void userCreatesAnotherOrderPOSTRequest(String path) {
+        errorResponse = with()
+                .body(OrderTestingHelper.getMockOrderLoadingRequest(
+                        droneResponseBody.getData().getId().toString(),
+                        medicationResponseBody.getData().getId().toString(),
+                        90
+                ))
+                .contentType(ContentType.JSON)
+                .when()
+                .request("POST", path)
+                .then()
+                .statusCode(409)
+                .extract()
+                .as(new OrderTestingHelper.ErrorResponseType().getType());
+    }
+
+    @Then("Order should not be created with message {string}")
+    public void orderShouldNotBeCreatedWithMessages(String message) {
+        assertEquals(message, errorResponse.getMessage());
+    }
+
+    @When("Drone Battery Drain to {int}% after POST request {string}")
+    public void droneBatteryDrainToAfterPOSTRequest(int percentage, String path) {
+        droneResponseBody = with()
+                .body(DroneTestingHelper.getMockLowBatteryDroneUpdateRequest(droneResponseBody.getData().getId().toString()))
+                .contentType(ContentType.JSON)
+                .when()
+                .request("PUT", path)
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(new DroneTestingHelper.DroneEntityTypeReference().getType());
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 })
 public class DroneiaRestErrorHandler {
 
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public BasicResponse<String> handleResourceNotFoundException(ResourceNotFoundException e) {
@@ -35,13 +36,13 @@ public class DroneiaRestErrorHandler {
     @ExceptionHandler(DroneBusyException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public BasicResponse<String> handleDroneBusyException(DroneBusyException e) {
-        return new BasicResponse<>("Cannot Use This Drone", e.getMessage());
+        return new BasicResponse<>("Cannot use this drone due to loaded drone", e.getMessage());
     }
 
     @ExceptionHandler(LowBatteryException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public BasicResponse<String> handleLowBatteryException(LowBatteryException e) {
-        return new BasicResponse<>("Cannot Use This Drone", e.getMessage());
+        return new BasicResponse<>("Cannot use this drone due to low battery", e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
