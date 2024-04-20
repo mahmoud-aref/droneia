@@ -1,24 +1,30 @@
 package com.elmenus.droneia.drones;
 
 import com.elmenus.droneia.domain.common.model.BasicResponse;
+import com.elmenus.droneia.domain.drone.model.DroneEntity;
 import com.elmenus.droneia.domain.drone.model.DroneRegistrationRequest;
-import com.elmenus.droneia.factory.FeaturesMockingFactory;
+import com.elmenus.droneia.factory.DroneTestingHelper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 
+import java.util.UUID;
+
 import static io.restassured.RestAssured.with;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DroneCreationFeatureSteps {
 
     private DroneRegistrationRequest droneRegistrationRequest;
-    private BasicResponse responseBody;
+    private BasicResponse<DroneEntity> responseBody;
+    private UUID droneId;
 
     @Given("the user provides valid drone creation request")
     public void the_user_provides_valid_drone_creation_request() {
-        this.droneRegistrationRequest = FeaturesMockingFactory.getMockDroneRegistrationRequest();
+        this.droneRegistrationRequest = DroneTestingHelper.getMockDroneRegistrationRequest();
     }
 
     @When("the user sends a POST request to {string}")
@@ -31,11 +37,39 @@ public class DroneCreationFeatureSteps {
                 .then()
                 .statusCode(200)
                 .extract()
-                .as(BasicResponse.class);
+                .as(new DroneTestingHelper.DroneEntityTypeReference().getType());
     }
 
     @And("the response should contain {string}")
     public void the_response_should_contain(String message) {
         assertEquals(message, responseBody.getMessage());
+    }
+
+    @And("the response should contain drone id")
+    public void theResponseShouldContainDroneId() {
+        assertNotNull(responseBody.getData().getId());
+        droneId = responseBody.getData().getId();
+    }
+
+
+    @Then("the user should be able GET drone details by id")
+    public void theUserShouldBeAbleGETDroneDetailsById() {
+        with()
+                .pathParam("id", droneId)
+                .when()
+                .request("GET", "/drones/{id}")
+                .then()
+                .statusCode(200);
+    }
+
+    @Then("the user should be able GET on {string} drone details by id")
+    public void theUserShouldBeAbleGETOnDroneDetailsById(String path) {
+        with()
+                .pathParam("id", droneId)
+                .when()
+                .request("GET", path)
+                .then()
+                .statusCode(200);
+        assertEquals(responseBody.getData().getId(), droneId);
     }
 }
